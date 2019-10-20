@@ -90,21 +90,39 @@ namespace StoreApp.App.Controllers
             return View();
         }
 
-        // POST: Customer/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Login()
+        {
+            var viewModel = new CustomerOrdersViewModel();
+            return View(viewModel);
+        }
+
+        // POST: Customer/CustomerInfo/5
+        public async Task<ActionResult> CustomerOrders(string username)
         {
             try
             {
-                // TODO: Add update logic here
+                Logic.Customer customer = await _repository.GetCustomerInformationByUserName(username);
+                List<Logic.Order> orders = await _repository.GetAllOrdersFromCustomer(customer.customerId);
 
-                return RedirectToAction(nameof(Index));
+                var viewModel = new CustomerOrdersViewModel
+                {
+                    Username = customer.userName,
+                    FirstName = customer.firstName,
+                    LastName = customer.lastName,
+                    CustomerOrders = orders
+                };
+                    return View(viewModel);
+
             }
-            catch
+            catch (InvalidOperationException)
             {
-                return View();
+
+                return RedirectToAction(nameof(InvalidCustomer));
             }
+        }
+        public ActionResult InvalidCustomer(int inputCustomerID)
+        {
+            return View(inputCustomerID);
         }
 
         // GET: Customer/Delete/5
