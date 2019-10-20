@@ -13,6 +13,7 @@ namespace StoreApp.App.Controllers
     public class CustomerController : Controller
     {
         private readonly IRepository _repository;
+        static Models.CustomerIndexViewModel _baseViewModel = new Models.CustomerIndexViewModel();
 
         public CustomerController(IRepository repository)
         {
@@ -22,9 +23,9 @@ namespace StoreApp.App.Controllers
         // GET: Customer
         public async Task<ActionResult> Index()
         {
-            IEnumerable<Logic.Customer> customers = await _repository.GetAllCustomers();
+           
 
-            return View(customers);
+            return View();
         }
 
         // GET: Customer/Details/5
@@ -66,7 +67,7 @@ namespace StoreApp.App.Controllers
 
             
                 await _repository.AddNewCustomerAsync(customer);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Login));
 
 
             }
@@ -92,12 +93,36 @@ namespace StoreApp.App.Controllers
 
         public ActionResult Login()
         {
-            var viewModel = new CustomerOrdersViewModel();
-            return View(viewModel);
+            return View(new Models.LoginViewModel(_baseViewModel));
         }
 
-        // POST: Customer/CustomerInfo/5
-        public async Task<ActionResult> CustomerOrders(string username)
+        // POST: RatStore/LogIn
+        [HttpPost]
+        public ActionResult Login( string username)
+        {
+            try
+            {
+                var cuts = _repository.GetCustomerInformationByUserName(username);
+
+
+
+                if (cuts.Result == null)
+                {
+                    throw new Exception("User Not Found");
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Username", ex.Message);
+                return View();
+            }
+        }
+            // POST: Customer/CustomerOrders/5
+            public async Task<ActionResult> CustomerOrders(string username)
         {
             try
             {
@@ -125,16 +150,16 @@ namespace StoreApp.App.Controllers
             return View(inputCustomerID);
         }
 
-        // GET: Customer/Delete/5
-        public ActionResult Delete(int id)
+        // GET: Customer/PlaceAnOrder/5
+        public ActionResult PlaceAnOrder(int id)
         {
             return View();
         }
 
-        // POST: Customer/Delete/5
+        // POST: Customer/PlaceAnOrder/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult PlaceAnOrder(int id, IFormCollection collection)
         {
             try
             {
