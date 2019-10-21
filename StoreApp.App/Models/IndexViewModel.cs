@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace StoreApp.App.Models
 {
-    public class LoginViewModel
+    public class IndexViewModel
     {
-        [Required(ErrorMessage = "This field is required.")]
+        [Required]
+        public int Choice { get; set; }
         public string Username { get; set; }
     }
-
 }

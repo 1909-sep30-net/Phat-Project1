@@ -30,4 +30,15 @@ namespace StoreApp.App.Models
         public string LastName { get; set; }
         public List<Order> CustomerOrders { get; set; }
     }
+
+    public class CustomerMakeAnOrder
+    {
+        public int StoreId { get; set; }
+        public int NumberofAriel { get; set; }
+        public int NumberofDownie { get; set; }
+        public int NumberofSuavitel { get; set; }
+        public int CustomerId { get; set; }
+        public int orderID { get; set; }
+
+    }
 }

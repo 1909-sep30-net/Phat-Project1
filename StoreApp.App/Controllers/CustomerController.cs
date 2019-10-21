@@ -13,29 +13,54 @@ namespace StoreApp.App.Controllers
     public class CustomerController : Controller
     {
         private readonly IRepository _repository;
-        static Models.CustomerIndexViewModel _baseViewModel = new Models.CustomerIndexViewModel();
 
         public CustomerController(IRepository repository)
         {
             _repository = repository;
         }
 
-        // GET: Customer
-        public async Task<ActionResult> Index()
+        // GET: Home Page
+        public ActionResult Index()
         {
-           
-
             return View();
         }
-
-        // GET: Customer/Details/5
-        public ActionResult Details(int id)
+        // POST: Home Page
+        [HttpPost]
+        public  ActionResult Index(int choice)
         {
-            return View();
+            try
+            {
+      
+                if (choice == 2)
+                {
+                    if (TempData["Username"] != null)
+                    {
+                        TempData.Keep();
+                    }
+                    return RedirectToAction(nameof(CustomerOrders));
+
+                }
+                else if (choice == 1)
+                {
+                    if (TempData["Username"] != null)
+                    {
+                        TempData.Keep();
+                    }
+                    return RedirectToAction(nameof(MakeAnOrder));
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("userChoice", ex.Message);
+                return View();
+            }
         }
 
         // GET: Customer/Create
- 
         public async Task<ActionResult> Create()
         {
             return View();
@@ -85,26 +110,19 @@ namespace StoreApp.App.Controllers
             
         }
 
-        // GET: Customer/Edit/5
-        public ActionResult Edit(int id)
+   
+        public ActionResult Login()
         {
             return View();
         }
 
-        public ActionResult Login()
-        {
-            return View(new Models.LoginViewModel(_baseViewModel));
-        }
-
-        // POST: RatStore/LogIn
+        // POST: /LogIn
         [HttpPost]
-        public ActionResult Login( string username)
+        public ActionResult Login(string username)
         {
             try
             {
                 var cuts = _repository.GetCustomerInformationByUserName(username);
-
-
 
                 if (cuts.Result == null)
                 {
@@ -112,6 +130,8 @@ namespace StoreApp.App.Controllers
                 }
                 else
                 {
+                    TempData["Username"] = username;
+
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -122,10 +142,16 @@ namespace StoreApp.App.Controllers
             }
         }
             // POST: Customer/CustomerOrders/5
-            public async Task<ActionResult> CustomerOrders(string username)
+            public async Task<ActionResult> CustomerOrders()
         {
             try
             {
+                string username = null;
+                if (TempData["Username"] != null)
+                {
+                    username = TempData["Username"].ToString();
+                }
+
                 Logic.Customer customer = await _repository.GetCustomerInformationByUserName(username);
                 List<Logic.Order> orders = await _repository.GetAllOrdersFromCustomer(customer.customerId);
 
@@ -150,8 +176,8 @@ namespace StoreApp.App.Controllers
             return View(inputCustomerID);
         }
 
-        // GET: Customer/PlaceAnOrder/5
-        public ActionResult PlaceAnOrder(int id)
+        // GET: Customer/PlaceAnOrder/
+        public ActionResult MakeAnOrder()
         {
             return View();
         }
@@ -159,11 +185,42 @@ namespace StoreApp.App.Controllers
         // POST: Customer/PlaceAnOrder/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PlaceAnOrder(int id, IFormCollection collection)
+        public async Task<ActionResult> MakeAnOrder(Models.CustomerMakeAnOrder order)
         {
             try
             {
-                // TODO: Add delete logic here
+                int StoreId =order.StoreId;
+                string username = null;
+                if (TempData["Username"] != null)
+                    username = TempData["Username"].ToString();
+
+
+                if (TempData["StoreId"] != null)
+                    StoreId = (int)TempData["StoreId"];
+
+                Logic.Customer cust = await _repository.GetCustomerInformationByUserName(username);
+                Logic.Store store = await _repository.GetStoreInformation(StoreId);
+
+                Logic.Order ord = new Logic.Order()
+                {
+                    customer = new Logic.Customer
+                    {
+                        customerId = cust.customerId
+                    },
+                    storeLocation = new Logic.Store
+                    {
+                        storeId = store.storeId
+                    },
+                    cartItems = new Product
+                    {
+                        NumberofAriel = order.NumberofAriel,
+                        NumberofDownie = order.NumberofDownie,
+                        NumberofSuavitel = order.NumberofSuavitel,
+                    }
+                };
+
+                await _repository.MakeAnOrder(StoreId, ord);
+
 
                 return RedirectToAction(nameof(Index));
             }

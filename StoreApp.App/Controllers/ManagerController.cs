@@ -18,10 +18,64 @@ namespace StoreApp.App.Controllers
             _repository = repository;
         }
 
-        // GET: Manager
+
+        public ActionResult Index(int choice)
+        {
+            try
+            {
+
+
+                if (choice == 1)
+                {
+                    if (TempData["ManagerId"] != null)
+                    {
+                        TempData.Keep();
+                    }
+                    return RedirectToAction(nameof(Details));
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("userChoice", ex.Message);
+                return View();
+            }
+        }
+
+
+
         public ActionResult Login()
         {
             return View();
+        }
+
+        // POST: /LogIn
+        [HttpPost]
+        public ActionResult Login(int pass)
+        {
+            try
+            {
+                var man = _repository.GetManager(pass);
+
+                if (man.Result == null)
+                {
+                    throw new Exception("Manager Not Found");
+                }
+                else
+                {
+                    TempData["Password"] = pass;
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Username", ex.Message);
+                return View();
+            }
         }
 
         // GET: Manager/Details/5

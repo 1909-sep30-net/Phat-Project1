@@ -16,4 +16,6 @@ namespace StoreApp.App.Models
         [DisplayName("Last Name")]
         public string LastName { get; set; }
     }
+
+   
 }

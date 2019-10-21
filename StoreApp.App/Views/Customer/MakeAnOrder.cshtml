@@ -1,0 +1,46 @@
+﻿@model StoreApp.App.Models.CustomerMakeAnOrder
+
+@{
+    ViewData["Title"] = "MakeAnOrder";
+}
+
+<h1>MakeAnOrder</h1>
+
+<h4>CustomerMakeAnOrder</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="MakeAnOrder">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StoreId" class="control-label">1. Arlington, TX || 2. Houston, TX</label>
+                <input asp-for="StoreId" class="form-control" />
+                <span asp-validation-for="StoreId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberofAriel" class="control-label"></label>
+                <input asp-for="NumberofAriel" class="form-control" />
+                <span asp-validation-for="NumberofAriel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberofDownie" class="control-label"></label>
+                <input asp-for="NumberofDownie" class="form-control" />
+                <span asp-validation-for="NumberofDownie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberofSuavitel" class="control-label"></label>
+                <input asp-for="NumberofSuavitel" class="form-control" />
+                <span asp-validation-for="NumberofSuavitel" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Place Order" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
