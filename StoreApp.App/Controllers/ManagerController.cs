@@ -37,6 +37,11 @@ namespace StoreApp.App.Controllers
                 {
                     return RedirectToAction(nameof(SearchCustomerByName));
                 }
+                else if(choice == 3)
+                {
+                    return RedirectToAction(nameof(SeachOrdersByStore));
+                }
+
                 else
                 {
                     return View();
@@ -143,7 +148,7 @@ namespace StoreApp.App.Controllers
         }
 
         // GET: Manager/Edit/5
-        public async Task<ActionResult> SearchCustomerByName()
+        public ActionResult SearchCustomerByName()
         {
             return View();
         }
@@ -157,26 +162,86 @@ namespace StoreApp.App.Controllers
             {
                 string username = UserName.Name;
                 var customerInfo = await _repository.GetCustomerInformationByName(username);
-
-                if(customerInfo.Count == 0)
-                {
-                    return RedirectToAction(nameof(Login));
-                }
-                else
-                {
-                    return RedirectToAction(nameof(Index));
-
-                }
+                TempData["CustomerName"] = username;
+                return RedirectToAction(nameof(CustomerInfoDisplay));
+                
             }
             catch
-            {
-               
+            {             
                 return View();
             }
         }
 
-       
+        public async Task<ActionResult> CustomerInfoDisplay()
+        {
+            string seachByName=null;
+            if(TempData["CustomerName"] != null)
+            {
+                seachByName = (string)TempData["CustomerName"];
+            }
+            var customerInfo = await _repository.GetCustomerInformationByName(seachByName);
+            List<Models.CustomerListDisplay> cut = new List<Models.CustomerListDisplay>();
+            if(customerInfo.Count != 0)
+            {
+               foreach(var c in customerInfo)
+                {
+                    var viewModel = new Models.CustomerListDisplay()
+                    {
+                        CustomerList = customerInfo
+                    };
+                    cut.Add(viewModel);
+                }
+            }
+            return View(cut);
 
+        }
 
+        public ActionResult SeachOrdersByStore()
+        {
+            return View();
+        }
+
+        // POST: Manager/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SeachOrdersByStore(Models.SearchOrdersByStore store)
+        {
+            try
+            {
+                int checkedStore = store.StoreId;
+                TempData["StoreId"] = checkedStore;
+
+                return RedirectToAction(nameof(OrdersInfoDisplay));
+
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public async Task<ActionResult> OrdersInfoDisplay()
+        {
+            int searchByStore = 0;
+            if (TempData["StoreId"] != null)
+            {
+                searchByStore = (int)TempData["StoreId"];
+            }
+            var orderInfo = await _repository.GetAllOrdersFromStore(searchByStore);
+
+            List<Models.OrdersListDisplay> ord = new List<OrdersListDisplay>();
+            if (orderInfo.Count != 0)
+            {
+                foreach (var order in orderInfo)
+                {
+                    var viewModel = new Models.OrdersListDisplay()
+                    {
+                        OrdersList = orderInfo
+                    };
+                    ord.Add(viewModel);
+                }
+            }
+            return View(ord);
+        }
     }
 }

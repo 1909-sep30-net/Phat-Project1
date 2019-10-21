@@ -141,11 +141,11 @@ namespace StoreApp.App.Controllers
                 return View();
             }
         }
-            // POST: Customer/CustomerOrders/5
+            // GET: Customer/CustomerOrders/5
             public async Task<ActionResult> CustomerOrders()
-        {
-            try
             {
+                try
+                {
                 string username = null;
                 if (TempData["Username"] != null)
                 {

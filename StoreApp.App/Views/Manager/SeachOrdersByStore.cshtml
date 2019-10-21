@@ -1,0 +1,30 @@
+﻿@model StoreApp.App.Models.SearchOrdersByStore
+
+@{
+    ViewData["Title"] = "SeachOrdersByStore";
+}
+
+<h1>SeachOrdersByStore</h1>
+
+<h4>SearchOrdersByStore</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SeachOrdersByStore">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StoreId" class="control-label">1.Arlington,TX || 5.Houston,TX</label>
+                <input asp-for="StoreId" class="form-control" />
+                <span asp-validation-for="StoreId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

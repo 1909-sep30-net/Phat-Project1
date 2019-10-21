@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StoreApp.Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -29,4 +30,22 @@ namespace StoreApp.App.Models
         [Required]
         public string Name { get; set; }
     }
+
+    public class CustomerListDisplay
+    {
+        public List<Logic.Customer> CustomerList { get; set; }
+    }
+
+    public class SearchOrdersByStore
+    {
+        public int StoreId { get; set; }
+        
+    }
+
+    public class OrdersListDisplay
+    {
+        public List<Logic.Order> OrdersList { get; set; }
+    }
+
+
 }

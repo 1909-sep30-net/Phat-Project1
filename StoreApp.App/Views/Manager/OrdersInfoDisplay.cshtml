@@ -1,0 +1,37 @@
+﻿@model IEnumerable<StoreApp.App.Models.OrdersListDisplay>
+
+@{
+    ViewData["Title"] = "OrdersInfoDisplay";
+}
+
+<h1>OrdersInfoDisplay</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div>
+    <h1>Order History</h1>
+    <hr />
+    @if (Model.Count() == 0)
+    {
+        <h4>NO ORDER INFORMATION</h4>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            @foreach (var o in order.OrdersList)
+            {
+                <h4>Order Id: @o.orderID</h4>
+                <h4>Customer Id: @o.customer.customerId</h4>
+                <h4>Number of Ariel @o.cartItems.NumberofAriel</h4>
+                <h4>Number of Downie @o.cartItems.NumberofDownie</h4>
+                <h4>Number of Suavitel @o.cartItems.NumberofSuavitel</h4>
+                <br/>
+                <hr/>
+            }
+            break;
+        }
+    }
+
+</div>
