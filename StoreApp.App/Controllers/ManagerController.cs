@@ -33,6 +33,10 @@ namespace StoreApp.App.Controllers
                     }
                     return RedirectToAction(nameof(Details));
                 }
+                else if(choice == 2)
+                {
+                    return RedirectToAction(nameof(SearchCustomerByName));
+                }
                 else
                 {
                     return View();
@@ -54,6 +58,8 @@ namespace StoreApp.App.Controllers
 
         // POST: /LogIn
         [HttpPost]
+        [ValidateAntiForgeryToken]
+
         public ActionResult Login(int pass)
         {
             try
@@ -62,28 +68,32 @@ namespace StoreApp.App.Controllers
 
                 if (man.Result == null)
                 {
-                    throw new Exception("Manager Not Found");
+                    throw new Exception();
                 }
                 else
                 {
                     TempData["Password"] = pass;
+                    TempData["ManagerId"] = man.Result.managerID;
 
                     return RedirectToAction(nameof(Index));
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Username", ex.Message);
+                ModelState.AddModelError("Pass", "Manager Not Found");
                 return View();
             }
         }
 
         // GET: Manager/Details/5
-        public async Task<ActionResult> Details(int ManagerID)
+        public async Task<ActionResult> Details()
         {
             try 
             {
-                var entityManager = await _repository.GetManager(ManagerID);
+                int ManagerId = 0;
+                if (TempData["ManagerId"] != null)
+                    ManagerId = (int)TempData["ManagerId"];
+                var entityManager = await _repository.GetManager(ManagerId);
                 var viewModel = new ManagerViewModel
                 {
                     ManagerID = entityManager.managerID,
@@ -133,7 +143,7 @@ namespace StoreApp.App.Controllers
         }
 
         // GET: Manager/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> SearchCustomerByName()
         {
             return View();
         }
@@ -141,43 +151,31 @@ namespace StoreApp.App.Controllers
         // POST: Manager/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> SearchCustomerByName(Models.SearchCustomerByName UserName)
         {
             try
             {
-                // TODO: Add update logic here
+                string username = UserName.Name;
+                var customerInfo = await _repository.GetCustomerInformationByName(username);
 
-                return RedirectToAction(nameof(Index));
+                if(customerInfo.Count == 0)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+
+                }
             }
             catch
             {
+               
                 return View();
             }
         }
 
-        // GET: Manager/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Manager/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
+       
 
 
     }

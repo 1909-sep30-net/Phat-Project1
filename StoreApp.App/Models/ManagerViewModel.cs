@@ -17,5 +17,16 @@ namespace StoreApp.App.Models
         public string LastName { get; set; }
     }
 
-   
+    public class ManagerIndexViewModel
+    {
+        [Required]
+        public int choice { get; set; }
+        
+    }
+
+    public class SearchCustomerByName
+    {
+        [Required]
+        public string Name { get; set; }
+    }
 }

@@ -8,7 +8,7 @@ namespace StoreApp.App.Models
 {
     public class ManagerLoginModel
     {
-            [Required]
-            public int Pass { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Password Is Required")]
+        public int Pass { get; set; }
     }
 }
