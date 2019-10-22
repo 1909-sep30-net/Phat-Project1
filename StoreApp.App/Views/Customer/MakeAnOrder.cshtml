@@ -11,28 +11,29 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="MakeAnOrder">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="StoreId" class="control-label">1. Arlington, TX || 2. Houston, TX</label>
+                <label asp-for="StoreId" class="control-label">1. Arlington, TX || 5. Houston, TX</label>
                 <input asp-for="StoreId" class="form-control" />
                 <span asp-validation-for="StoreId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumberofAriel" class="control-label"></label>
+                <label asp-for="NumberofAriel" class="control-label">Ariel</label>
                 <input asp-for="NumberofAriel" class="form-control" />
                 <span asp-validation-for="NumberofAriel" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumberofDownie" class="control-label"></label>
+                <label asp-for="NumberofDownie" class="control-label">Downie</label>
                 <input asp-for="NumberofDownie" class="form-control" />
                 <span asp-validation-for="NumberofDownie" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumberofSuavitel" class="control-label"></label>
+                <label asp-for="NumberofSuavitel" class="control-label">Suavite</label>
                 <input asp-for="NumberofSuavitel" class="form-control" />
                 <span asp-validation-for="NumberofSuavitel" class="text-danger"></span>
             </div>
-            
+
             <div class="form-group">
                 <input type="submit" value="Place Order" class="btn btn-primary" />
             </div>
@@ -40,7 +41,4 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 

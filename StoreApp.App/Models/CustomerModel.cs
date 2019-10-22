@@ -10,8 +10,7 @@ namespace StoreApp.App.Models
 {
     public class Customer
     {
-        [DisplayName("Customer ID")]
-        public int CustomerId { get; set; }
+      
         [Required]
         public string Username { get; set; }
         public Address customerAddress { get; set; }

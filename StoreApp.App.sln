@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreApp.App", "StoreApp.App\StoreApp.App.csproj", "{48EE1083-45AB-4FCE-90B9-3A9D76931C9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreApp.App", "StoreApp.App\StoreApp.App.csproj", "{48EE1083-45AB-4FCE-90B9-3A9D76931C9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreApp.Data", "StoreApp.Data\StoreApp.Data.csproj", "{14AC3084-9D41-4E83-975B-6181376A5D32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreApp.Data", "StoreApp.Data\StoreApp.Data.csproj", "{14AC3084-9D41-4E83-975B-6181376A5D32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreApp.Logic", "StoreApp.Logic\StoreApp.Logic.csproj", "{A230BA6A-F180-4E9C-9656-F72ACB9EE89D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreApp.Logic", "StoreApp.Logic\StoreApp.Logic.csproj", "{A230BA6A-F180-4E9C-9656-F72ACB9EE89D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreApp.Testing", "StoreApp.Testing\StoreApp.Testing.csproj", "{F6CDB7E6-BCE5-4CAB-93DD-EA69637F875D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{A230BA6A-F180-4E9C-9656-F72ACB9EE89D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A230BA6A-F180-4E9C-9656-F72ACB9EE89D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A230BA6A-F180-4E9C-9656-F72ACB9EE89D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6CDB7E6-BCE5-4CAB-93DD-EA69637F875D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6CDB7E6-BCE5-4CAB-93DD-EA69637F875D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6CDB7E6-BCE5-4CAB-93DD-EA69637F875D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6CDB7E6-BCE5-4CAB-93DD-EA69637F875D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

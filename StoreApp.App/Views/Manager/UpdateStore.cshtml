@@ -1,0 +1,25 @@
+﻿@model StoreApp.App.Models.UpdateStore
+
+@{
+    ViewData["Title"] = "UpdateStore";
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpdateStore">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StorePicked" class="control-label">1.Arlington,TX || 5.Houston,TX</label>
+                <input asp-for="StorePicked" class="form-control" />
+                <span asp-validation-for="StorePicked" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

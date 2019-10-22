@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using StoreApp.App.Models;
 using StoreApp.Data;
 using StoreApp.Logic;
@@ -26,7 +27,8 @@ namespace StoreApp.App.Controllers
         }
         // POST: Home Page
         [HttpPost]
-        public  ActionResult Index(int choice)
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(int choice)
         {
             try
             {
@@ -48,14 +50,20 @@ namespace StoreApp.App.Controllers
                     }
                     return RedirectToAction(nameof(MakeAnOrder));
                 }
+                else if (choice == 3)
+                {
+                    
+                    return RedirectToAction(nameof(Login));
+                }
                 else
                 {
-                    return View();
+                    throw new Exception();
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("userChoice", ex.Message);
+                Log.Error("Invalid Input");
+                ModelState.AddModelError("Choice", "Invalid Input");
                 return View();
             }
         }
@@ -98,15 +106,12 @@ namespace StoreApp.App.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                Log.Warning("Username is Existing");
                 ModelState.AddModelError("Username", ex.Message);
-
                 var cust = await _repository.GetAllCustomers();
                 return View(viewModel);
             }
-            catch (Exception)
-            {
-                return View(viewModel);
-            }
+            
             
         }
 
@@ -118,6 +123,7 @@ namespace StoreApp.App.Controllers
 
         // POST: /LogIn
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(string username)
         {
             try
@@ -126,7 +132,7 @@ namespace StoreApp.App.Controllers
 
                 if (cuts.Result == null)
                 {
-                    throw new Exception("User Not Found");
+                    throw new Exception();
                 }
                 else
                 {
@@ -137,12 +143,14 @@ namespace StoreApp.App.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Username", ex.Message);
+                Log.Information("User Not Found");
+                ModelState.AddModelError("Username", "User Not Found");
                 return View();
             }
         }
-            // GET: Customer/CustomerOrders/5
-            public async Task<ActionResult> CustomerOrders()
+
+        // GET: Customer/CustomerOrders/5
+        public async Task<ActionResult> CustomerOrders()
             {
                 try
                 {
@@ -167,7 +175,7 @@ namespace StoreApp.App.Controllers
             }
             catch (InvalidOperationException)
             {
-
+                Log.Information("Invalid Customer Order");
                 return RedirectToAction(nameof(InvalidCustomer));
             }
         }
@@ -182,7 +190,7 @@ namespace StoreApp.App.Controllers
             return View();
         }
 
-        // POST: Customer/PlaceAnOrder/5
+        // POST: Customer/PlaceAnOrder/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> MakeAnOrder(Models.CustomerMakeAnOrder order)
@@ -194,13 +202,14 @@ namespace StoreApp.App.Controllers
                 if (TempData["Username"] != null)
                     username = TempData["Username"].ToString();
 
-
-                if (TempData["StoreId"] != null)
-                    StoreId = (int)TempData["StoreId"];
-
+                if (StoreId != 1 && StoreId != 5)
+                {
+                    TempData.Keep("Username");
+                    throw new NullReferenceException();
+                }
                 Logic.Customer cust = await _repository.GetCustomerInformationByUserName(username);
                 Logic.Store store = await _repository.GetStoreInformation(StoreId);
-
+               
                 Logic.Order ord = new Logic.Order()
                 {
                     customer = new Logic.Customer
@@ -220,14 +229,30 @@ namespace StoreApp.App.Controllers
                 };
 
                 await _repository.MakeAnOrder(StoreId, ord);
-
-
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Thankyou));
             }
-            catch
+            catch(InvalidOperationException ex)
             {
+                TempData.Keep("Username");
+                ModelState.AddModelError("", ex.Message);
                 return View();
             }
+            catch(NullReferenceException)
+            {
+                Log.Error("Store Id is Invalid");
+                ModelState.AddModelError("StoreId", "Invalid Location");
+                return View(nameof(MakeAnOrder));
+            }
+            catch (Exception ex)
+            {
+                TempData.Keep("Username");
+                ModelState.AddModelError("", ex.Message);
+                return View();
+            }
+        }
+        public ActionResult Thankyou()
+        {
+            return View();
         }
     }
 }

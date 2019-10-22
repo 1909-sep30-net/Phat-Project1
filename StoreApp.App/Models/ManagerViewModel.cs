@@ -46,6 +46,16 @@ namespace StoreApp.App.Models
     {
         public List<Logic.Order> OrdersList { get; set; }
     }
-
-
+    
+    public class UpdateStore
+    {
+        [Required]
+        public int StorePicked { get; set; }
+    }
+    public class UpdateStoreDisPlay
+    {
+        public int Ariel { get; set; }
+        public int Downie { get; set; }
+        public int Suavitel { get; set; }
+    }
 }

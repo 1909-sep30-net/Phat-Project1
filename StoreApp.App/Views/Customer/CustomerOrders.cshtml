@@ -8,11 +8,11 @@
 <h1>Welcome Back, @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h1>
 
 <div>
-    <h4> Your History Orders:</h4>
+    <h4 style="color:blue"> Your History Orders:</h4>
     <hr />
     @foreach (var o in Model.CustomerOrders)
     {
-        <h4>Order ID: @o.orderID</h4>
+        <h4>Order ID: <span class="btn-danger">@o.orderID</span></h4>
         <h4>Location: @o.storeLocation.address.city</h4>
         <h4>Ariel: @o.cartItems.NumberofAriel</h4>
         <h4>Downie: @o.cartItems.NumberofDownie</h4>
@@ -22,6 +22,5 @@
 
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-controller="Customer">Back to List</a>
 </div>

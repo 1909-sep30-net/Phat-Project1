@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using StoreApp.App.Models;
 using StoreApp.Logic;
 
@@ -18,13 +19,18 @@ namespace StoreApp.App.Controllers
             _repository = repository;
         }
 
-
+        // GET: Home Page
+        public ActionResult Index()
+        {
+            return View();
+        }
+        // POST: Home Page
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(int choice)
         {
             try
             {
-
-
                 if (choice == 1)
                 {
                     if (TempData["ManagerId"] != null)
@@ -33,15 +39,18 @@ namespace StoreApp.App.Controllers
                     }
                     return RedirectToAction(nameof(Details));
                 }
-                else if(choice == 2)
+                else if (choice == 2)
                 {
                     return RedirectToAction(nameof(SearchCustomerByName));
                 }
-                else if(choice == 3)
+                else if (choice == 3)
                 {
                     return RedirectToAction(nameof(SeachOrdersByStore));
                 }
-
+                else if (choice == 4)
+                {
+                    return RedirectToAction(nameof(UpdateStore));
+                }
                 else
                 {
                     return View();
@@ -49,19 +58,20 @@ namespace StoreApp.App.Controllers
             }
             catch (Exception ex)
             {
+                Log.Error("Invalid Input");
                 ModelState.AddModelError("userChoice", ex.Message);
                 return View();
             }
         }
 
 
-
+        // GET: Login Page
         public ActionResult Login()
         {
             return View();
         }
 
-        // POST: /LogIn
+        // POST: /Login
         [HttpPost]
         [ValidateAntiForgeryToken]
 
@@ -85,15 +95,16 @@ namespace StoreApp.App.Controllers
             }
             catch (Exception ex)
             {
+                Log.Information("Manager Not Found");
                 ModelState.AddModelError("Pass", "Manager Not Found");
                 return View();
             }
         }
 
-        // GET: Manager/Details/5
+        // GET: Manager/Details/
         public async Task<ActionResult> Details()
         {
-            try 
+            try
             {
                 int ManagerId = 0;
                 if (TempData["ManagerId"] != null)
@@ -117,8 +128,8 @@ namespace StoreApp.App.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                Log.Information("Incorrect Manager Password ");
                 ModelState.AddModelError("ManagerID", ex.Message);
-
                 return View();
             }
 
@@ -147,13 +158,13 @@ namespace StoreApp.App.Controllers
             }
         }
 
-        // GET: Manager/Edit/5
+        // GET: Manager/SearchCustomerByName
         public ActionResult SearchCustomerByName()
         {
             return View();
         }
 
-        // POST: Manager/Edit/5
+        // POST: Manager/SearchCustomerByName
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SearchCustomerByName(Models.SearchCustomerByName UserName)
@@ -164,26 +175,27 @@ namespace StoreApp.App.Controllers
                 var customerInfo = await _repository.GetCustomerInformationByName(username);
                 TempData["CustomerName"] = username;
                 return RedirectToAction(nameof(CustomerInfoDisplay));
-                
+
             }
-            catch
-            {             
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
                 return View();
             }
         }
-
+        //GET: Manager/CustomerInfoDisplay
         public async Task<ActionResult> CustomerInfoDisplay()
         {
-            string seachByName=null;
-            if(TempData["CustomerName"] != null)
+            string seachByName = null;
+            if (TempData["CustomerName"] != null)
             {
                 seachByName = (string)TempData["CustomerName"];
             }
             var customerInfo = await _repository.GetCustomerInformationByName(seachByName);
             List<Models.CustomerListDisplay> cut = new List<Models.CustomerListDisplay>();
-            if(customerInfo.Count != 0)
+            if (customerInfo.Count != 0)
             {
-               foreach(var c in customerInfo)
+                foreach (var c in customerInfo)
                 {
                     var viewModel = new Models.CustomerListDisplay()
                     {
@@ -193,15 +205,14 @@ namespace StoreApp.App.Controllers
                 }
             }
             return View(cut);
-
         }
-
+        //GET: Manager/CustomerInfoDisplay
         public ActionResult SeachOrdersByStore()
         {
             return View();
         }
 
-        // POST: Manager/Edit/5
+        // POST: Manager/SeachOrdersByStore
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SeachOrdersByStore(Models.SearchOrdersByStore store)
@@ -214,34 +225,129 @@ namespace StoreApp.App.Controllers
                 return RedirectToAction(nameof(OrdersInfoDisplay));
 
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(ex.Message);
                 return View();
             }
         }
 
+        //GET: Manager/OrdersInfoDisplay
         public async Task<ActionResult> OrdersInfoDisplay()
         {
-            int searchByStore = 0;
-            if (TempData["StoreId"] != null)
+            try
             {
-                searchByStore = (int)TempData["StoreId"];
-            }
-            var orderInfo = await _repository.GetAllOrdersFromStore(searchByStore);
-
-            List<Models.OrdersListDisplay> ord = new List<OrdersListDisplay>();
-            if (orderInfo.Count != 0)
-            {
-                foreach (var order in orderInfo)
+                int searchByStore = 0;
+                if (TempData["StoreId"] != null)
                 {
-                    var viewModel = new Models.OrdersListDisplay()
-                    {
-                        OrdersList = orderInfo
-                    };
-                    ord.Add(viewModel);
+                    searchByStore = (int)TempData["StoreId"];
                 }
+
+                if (searchByStore != 1 && searchByStore != 5)
+                {
+                    throw new NullReferenceException();
+                }
+                var orderInfo = await _repository.GetAllOrdersFromStore(searchByStore);
+
+                List<Models.OrdersListDisplay> ord = new List<OrdersListDisplay>();
+                if (orderInfo.Count != 0)
+                {
+                    foreach (var order in orderInfo)
+                    {
+                        var viewModel = new Models.OrdersListDisplay()
+                        {
+                            OrdersList = orderInfo
+                        };
+                        ord.Add(viewModel);
+                    }
+                }
+                return View(ord);
             }
-            return View(ord);
+            catch (NullReferenceException)
+            {
+                Log.Information("Invalid Store Id");
+                ModelState.AddModelError("StoreId", "Invalid Location ID");
+                return View();
+            }
+        }
+        //GET: Manager/UpdateStore
+        public ActionResult UpdateStore()
+        {
+            return View();
+        }
+        //POST: Manager/OrdersInfoDisplay
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateStore(Models.UpdateStore st)
+        {
+            try
+            {
+                int sto = st.StorePicked;
+                TempData["StorePicked"] = sto;
+                var storeInfo = await _repository.GetStoreInformation(sto);
+
+                return RedirectToAction(nameof(UpdatedStoreDisplay));
+
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.Message);
+                return View();
+            }
+        }
+        //GET: Manager/UpdatedStoreDisplay
+        public ActionResult UpdatedStoreDisplay()
+        {
+            return View();
+        }
+        //POST: Manager/UpdatedStoreDisplay
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdatedStoreDisplay(Models.UpdateStoreDisPlay viewModel)
+        {
+            try
+            {
+                int sto = 0;
+                if (TempData["StorePicked"] != null)
+                {
+                    sto = (int)TempData["StorePicked"];
+                }
+                var storeInfo = await _repository.GetStoreInformation(sto);
+
+
+                Logic.Store updatedStore = new Logic.Store()
+                {
+                    address = new Address
+                    {
+                        city = storeInfo.address.city,
+                        street = storeInfo.address.street,
+                        state = storeInfo.address.state,
+                        zip = storeInfo.address.zip,
+                    },
+                    storeInventory = new Inventory
+                    {
+                        items = new Product
+                        {
+                            NumberofAriel = viewModel.Ariel,
+                            NumberofDownie = viewModel.Downie,
+                            NumberofSuavitel = viewModel.Suavitel
+                        }
+                    }
+            };
+                await _repository.UpdateStore(sto, updatedStore);
+                return RedirectToAction("Thankyou");
+                
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return View();
+            }
+        }
+
+        public ActionResult Thankyou()
+        {
+            return View();
         }
     }
 }

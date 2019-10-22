@@ -9,7 +9,7 @@
         <hr />
         @if (Model.Count() == 0)
         {
-            <h4>NO CUSTOMER INFORMATION</h4>
+            <h4 class="btn-danger">NO CUSTOMER INFORMATION</h4>
         }
         else
         {
@@ -17,7 +17,7 @@
             {
                 @foreach (var c in cust.CustomerList)
                 {
-                    <h4>Customer Id: @c.customerId</h4>
+                    <h4>Customer Id: <span class="btn-primary">@c.customerId</span></h4>
                     <h4>Last Name: @c.lastName</h4>
                     <h4>First Name: @c.firstName</h4>
                     <h4>Address:</h4>

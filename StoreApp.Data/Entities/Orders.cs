@@ -5,6 +5,7 @@ namespace StoreApp.Data.Entities
 {
     public partial class Orders
     {
+        
         public int OrderId { get; set; }
         public int CustomerId { get; set; }
         public int StoreId { get; set; }

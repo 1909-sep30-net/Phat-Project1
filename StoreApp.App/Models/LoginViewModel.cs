@@ -8,7 +8,7 @@ namespace StoreApp.App.Models
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "This field is required.")]
+        [Required]
         public string Username { get; set; }
     }
 
