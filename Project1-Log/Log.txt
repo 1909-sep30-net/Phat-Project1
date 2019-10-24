@@ -1,0 +1,16 @@
+2019-10-23 09:24:07.516 -05:00 [INF] Begin The Program
+2019-10-23 09:30:50.459 -05:00 [INF] Begin The Program
+2019-10-23 09:31:06.577 -05:00 [INF] Begin The Program
+2019-10-23 10:10:14.470 -05:00 [INF] Begin The Program
+2019-10-23 10:15:33.832 -05:00 [INF] Begin The Program
+2019-10-23 11:28:01.336 -05:00 [INF] Begin The Program
+2019-10-23 11:53:50.126 -05:00 [INF] Begin The Program
+2019-10-23 11:56:10.100 -05:00 [INF] Begin The Program
+2019-10-23 11:58:34.852 -05:00 [INF] Begin The Program
+2019-10-23 12:11:44.857 -05:00 [INF] Begin The Program
+2019-10-23 14:46:02.243 -05:00 [INF] Begin The Program
+2019-10-23 21:46:51.315 -05:00 [INF] Begin The Program
+2019-10-23 21:51:19.571 -05:00 [INF] Begin The Program
+2019-10-23 21:51:44.804 -05:00 [ERR] Store Id is Invalid
+2019-10-23 21:53:46.597 -05:00 [INF] Begin The Program
+2019-10-23 21:56:49.399 -05:00 [INF] Begin The Program
