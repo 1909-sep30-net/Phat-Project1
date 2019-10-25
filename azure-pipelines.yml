@@ -18,20 +18,6 @@ steps:
   workingDirectory: StoreApp.App
 
 
-- task: DotNetCoreCLI@2
-  displayName: project 1 Test
-  inputs:
-    command: 'test'
-    projects: './StoreApp.Testing'
-    arguments: '$(buildConfiguration)'
-
-- task: SonarCloudAnalyze@1
-  displayName: Run SonarCloud Analysis
-
-
-- task: SonarCloudPublish@1
-  displayName: Publish SonarCloud Analysis
-
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'sonarcloud-phatnguyen'
@@ -40,3 +26,18 @@ steps:
     projectKey: 'ABCStore'
     extraProperties: |
       sonar.exclusion=**/lib/**
+      
+- task: DotNetCoreCLI@2
+  displayName: project 1 Test
+  inputs:
+    command: 'test'
+    projects: './StoreApp.Testing'
+    arguments: '-c $(buildConfiguration) --collect "XPlat Code Coverage"'
+
+
+- task: SonarCloudAnalyze@1
+  displayName: Run SonarCloud Analysis
+
+
+- task: SonarCloudPublish@1
+  displayName: Publish SonarCloud Analysis
