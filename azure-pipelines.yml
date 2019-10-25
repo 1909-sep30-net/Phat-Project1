@@ -29,6 +29,7 @@ steps:
       
 - task: DotNetCoreCLI@2
   displayName: project 1 Test
+  continueOnError: true
   inputs:
     command: 'test'
     projects: './StoreApp.Testing'
