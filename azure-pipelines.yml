@@ -38,3 +38,5 @@ steps:
     organization: 'sonarcloud-phatnguyen'
     scannerMode: 'MSBuild'
     projectKey: 'ABCStore'
+    extraProperties: |
+      sonar.exclusion=**/lib/**
