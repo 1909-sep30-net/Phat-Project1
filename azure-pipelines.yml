@@ -24,3 +24,17 @@ steps:
     command: 'test'
     projects: './StoreApp.App'
     arguments: '$(buildConfiguration)'
+
+- task: SonarCloudAnalyze@1
+  displayName: Run SonarCloud Analysis
+
+
+- task: SonarCloudPublish@1
+  displayName: Publish SonarCloud Analysis
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sonarcloud-phatnguyen'
+    organization: 'sonarcloud-phatnguyen'
+    scannerMode: 'MSBuild'
+    projectKey: 'ABCStore'
