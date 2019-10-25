@@ -31,7 +31,7 @@ steps:
   displayName: project 1 Test
   inputs:
     command: 'test'
-    projects: './StoreApp.App'
+    projects: './StoreApp.Testing'
     arguments: '-c $(buildConfiguration) --collect "XPlat Code Coverage"'
 
 
