@@ -27,13 +27,13 @@ steps:
   workingDirectory: ./StoreApp.App
 
       
-# - task: DotNetCoreCLI@2
-#   displayName: project 1 Test
-#   continueOnError: true
-#   inputs:
-#     command: 'test'
-#     projects: './StoreApp.Testing'
-#     arguments: '-c $(buildConfiguration) --collect "XPlat Code Coverage"'
+- task: DotNetCoreCLI@2
+  displayName: project 1 Test
+  continueOnError: true
+  inputs:
+    command: 'test'
+    projects: './StoreApp.Testing'
+    arguments: '-c $(buildConfiguration) --collect "XPlat Code Coverage"'
 
 
 - task: SonarCloudAnalyze@1
