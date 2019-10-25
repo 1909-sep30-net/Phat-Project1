@@ -18,12 +18,12 @@ steps:
   workingDirectory: StoreApp.App
 
 
-# - task: DotNetCoreCLI@2
-#   displayName: project 1 Test
-#   inputs:
-#     command: 'test'
-#     projects: './StoreApp.App'
-#     arguments: '$(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: project 1 Test
+  inputs:
+    command: 'test'
+    projects: './StoreApp.Testing'
+    arguments: '$(buildConfiguration)'
 
 - task: SonarCloudAnalyze@1
   displayName: Run SonarCloud Analysis
